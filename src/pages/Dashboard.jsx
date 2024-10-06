@@ -8,6 +8,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme, Card, Table, Row, Col, Input } from 'antd';
+import logo from '../Images/logo.jpg';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Search } = Input;
@@ -25,10 +26,10 @@ function getItem(label, key, icon, children) {
 const items = [
   getItem(<Link to="/">Dashboard</Link>, '1', <PieChartOutlined />),
   getItem(<Link to="/sales">Sales</Link>, '2', <DesktopOutlined />),
-  getItem(<Link to="/profit&loss">Profit & Loss</Link>, 'sub1', <UserOutlined />),
-  getItem(<Link to="/promotions">Promotions</Link>, 'sub2', <TeamOutlined />),
-  getItem(<Link to="/offers">Offers</Link>, '9', <FileOutlined />),
-  getItem(<Link to="/refund">Refunds</Link>, '10', <FileOutlined />),
+  getItem(<Link to="/profit&loss">Profit & Loss</Link>, '3', <UserOutlined />),
+  getItem(<Link to="/promotions">Promotions</Link>, '4', <TeamOutlined />),
+  getItem(<Link to="/offers">Offers</Link>, '5', <FileOutlined />),
+  getItem(<Link to="/refund">Refunds</Link>, '6', <FileOutlined />),
 ];
 
 const Dashboard = () => {
@@ -68,18 +69,23 @@ const Dashboard = () => {
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
         <div className="demo-logo-vertical" style={{ textAlign: 'center', padding: '16px' }}>
           <img
-            src="../Images/logo.jpeg"
+            src={logo} // Use the imported logo
             alt="Logo"
-            style={{ width: collapsed ? '40px' : '100%', transition: 'width 0.3s' }}
+            style={{
+              width: collapsed ? '40px' : '80%', // Adjust size of the logo
+              transition: 'width 0.3s',
+              border: '1px solid red', // Add red border
+              borderRadius: '200px', // Optional: round the corners
+            }}
           />
         </div>
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
+        <Menu theme="dark" defaultSelectedKeys={['2']} mode="inline" items={items} />
       </Sider>
       <Layout>
         <Header
           style={{
             padding: '0 20px',
-            background: colorBgContainer,
+            background: '#d1bea8', // Set header background color to gray
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -112,17 +118,17 @@ const Dashboard = () => {
           <Row gutter={[16, 16]}>
             <Col span={8}>
               <Card title="Merchandise Sales" bordered={false}>
-                $12,000
+                Rs.12,000
               </Card>
             </Col>
             <Col span={8}>
               <Card title="Album Sales" bordered={false}>
-                $8,000
+                Rs.8,000
               </Card>
             </Col>
             <Col span={8}>
               <Card title="Tickets Sold" bordered={false}>
-                $15,000
+                Rs.15,000
               </Card>
             </Col>
           </Row>
@@ -173,6 +179,7 @@ const Dashboard = () => {
         <Footer
           style={{
             textAlign: 'center',
+            background: '#d1bea8', // Set footer background color to gray
           }}
         >
           Ant Design ©{new Date().getFullYear()} Created by Ant UED

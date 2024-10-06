@@ -1,35 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Button, Table, Modal, Form, Input, Upload, message } from 'antd';
 import { Link } from 'react-router-dom';
-import {
-    DesktopOutlined,
-    FileOutlined,
-    PieChartOutlined,
-    TeamOutlined,
-    UserOutlined,
-    UploadOutlined,
-  } from '@ant-design/icons';
+import { DesktopOutlined, FileOutlined, PieChartOutlined, TeamOutlined, UserOutlined, UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import logo from '../Images/logo.jpg';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 function getItem(label, key, icon) {
-  return {
-    key,
-    icon,
-    label,
-  };
+  return { key, icon, label };
 }
 
 // Menu items
 const items = [
-    getItem(<Link to="/">Dashboard</Link>, '1', <PieChartOutlined />),
-    getItem(<Link to="/sales">Sales</Link>, '2', <DesktopOutlined />), // Use Link here
-    getItem(<Link to="/profit&loss">Profit & Loss</Link>, 'sub1', <UserOutlined />),
-    getItem(<Link to="/promotions">Promotions</Link>, 'sub2', <TeamOutlined />),
-    getItem(<Link to="/offers">Offers</Link>, '9', <FileOutlined />),
-    getItem(<Link to="/refund">Refunds</Link>, '10', <FileOutlined />),
-  ];
+  getItem(<Link to="/">Dashboard</Link>, '1', <PieChartOutlined />),
+  getItem(<Link to="/sales">Sales</Link>, '2', <DesktopOutlined />),
+  getItem(<Link to="/profit&loss">Profit & Loss</Link>, '3', <UserOutlined />),
+  getItem(<Link to="/promotions">Promotions</Link>, '4', <TeamOutlined />),
+  getItem(<Link to="/offers">Offers</Link>, '5', <FileOutlined />),
+  getItem(<Link to="/refund">Refunds</Link>, '6', <FileOutlined />),
+];
 
 const Promotions = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -41,14 +31,13 @@ const Promotions = () => {
   // Fetch promotions from the backend
   const fetchPromotions = async () => {
     try {
-      const response = await axios.get('/api/promotions'); // Adjust API endpoint
+      const response = await axios.get('http://localhost:5000/api/promotions');
       setPromotions(response.data);
     } catch (error) {
       message.error('Failed to fetch promotions.');
     }
   };
 
-  // Use Effect to fetch promotions on mount
   useEffect(() => {
     fetchPromotions();
   }, []);
@@ -57,21 +46,19 @@ const Promotions = () => {
   const showModal = (promotion) => {
     setEditingPromotion(promotion);
     setIsModalVisible(true);
-    form.resetFields(); // Reset fields when opening the modal
+    form.resetFields();
   };
 
   // Handle form submission
   const handleFinish = async (values) => {
     try {
       if (editingPromotion) {
-        // Update promotion
-        await axios.put(`/api/promotions/${editingPromotion.id}`, values);
+        await axios.put(`http://localhost:5000/api/promotions/${editingPromotion.id}`, values);
       } else {
-        // Create new promotion
-        await axios.post('/api/promotions', values);
+        await axios.post('http://localhost:5000/api/promotions', values);
       }
       setIsModalVisible(false);
-      fetchPromotions(); // Refresh promotions list
+      fetchPromotions();
       message.success('Promotion saved successfully!');
     } catch (error) {
       message.error('Failed to save promotion.');
@@ -81,7 +68,7 @@ const Promotions = () => {
   // Handle delete promotion
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/promotions/${id}`);
+      await axios.delete(`http://localhost:5000/api/promotions/${id}`);
       fetchPromotions();
       message.success('Promotion deleted successfully!');
     } catch (error) {
@@ -110,58 +97,33 @@ const Promotions = () => {
     },
   ];
 
-     // State for the current time
-     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
-     const { Search } = Input;
-  
-     // Update the time every second
-     useEffect(() => {
-       const timer = setInterval(() => {
-         setCurrentTime(new Date().toLocaleTimeString());
-       }, 1000);
-   
-       // Cleanup timer on component unmount
-       return () => clearInterval(timer);
-     }, []);
-
   return (
     <Layout style={{ minHeight: '100vh' }}>
-    <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-      <div className="demo-logo-vertical" style={{ textAlign: 'center', padding: '16px' }}>
-        {/* Replace 'path/to/your/logo.png' with the actual path to your logo */}
-        <img
-          src="../Images/logo.jpeg" 
-          alt="Logo"
-          style={{ width: collapsed ? '40px' : '100%', transition: 'width 0.3s' }} // Adjust width for collapsed state
-        />
-      </div>
-      <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
-    </Sider>
-      <Layout>
-        <Header
-          style={{
-            padding: '0 20px',
-            background: '#fff',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          {/* Search Bar on the Left */}
-          <Search
-            placeholder="Search..."
-            onSearch={(value) => console.log(value)}
-            style={{ width: 300 }}
+      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+        <div className="demo-logo-vertical" style={{ textAlign: 'center', padding: '16px' }}>
+          <img
+            src={logo} // Use the imported logo
+            alt="Logo"
+            style={{
+              width: collapsed ? '40px' : '80%', // Adjust size of the logo
+              transition: 'width 0.3s',
+              border: '1px solid red', // Add red border
+              borderRadius: '200px', // Optional: round the corners
+            }}
           />
-
-          {/* Display Current Time on the Right */}
-          <div style={{ fontSize: '18px' }}>{currentTime}</div>
+        </div>
+        <Menu theme="dark" defaultSelectedKeys={['2']} mode="inline" items={items} />
+      </Sider>
+      <Layout>
+        <Header style={{ padding: '0 20px', background: '#d1bea8', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Input.Search placeholder="Search..." onSearch={(value) => console.log(value)} style={{ width: 300 }} />
+          <div style={{ fontSize: '18px' }}>{new Date().toLocaleTimeString()}</div>
         </Header>
         <Content style={{ margin: '24px 16px' }}>
           <div style={{ padding: 24, background: '#fff', borderRadius: 8 }}>
-          <h2>Promotions</h2>
+            <h2>Promotions</h2>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
-                <Button type="primary" onClick={() => showModal(null)}>Create Promotion</Button>
+              <Button type="primary" onClick={() => showModal(null)}>Create Promotion</Button>
             </div>
             <Table columns={columns} dataSource={promotions} pagination={false} />
 
@@ -186,7 +148,7 @@ const Promotions = () => {
                       form.setFieldsValue({ image: base64String });
                     };
                     reader.readAsDataURL(file);
-                    return false; // Prevent upload
+                    return false;
                   }}>
                     <Button icon={<UploadOutlined />}>Upload</Button>
                   </Upload>
@@ -198,8 +160,8 @@ const Promotions = () => {
             </Modal>
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          Ant Design ©{new Date().getFullYear()} Created by Your Name
+        <Footer style={{ textAlign: 'center', background: '#d1bea8', }}>
+        Ant Design ©{new Date().getFullYear()} Created by Ant UED
         </Footer>
       </Layout>
     </Layout>

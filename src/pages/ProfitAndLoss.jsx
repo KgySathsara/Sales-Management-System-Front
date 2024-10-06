@@ -9,6 +9,7 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import logo from '../Images/logo.jpg';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -25,10 +26,10 @@ function getItem(label, key, icon, children) {
 const items = [
   getItem(<Link to="/">Dashboard</Link>, '1', <PieChartOutlined />),
   getItem(<Link to="/sales">Sales</Link>, '2', <DesktopOutlined />),
-  getItem(<Link to="/profit&loss">Profit & Loss</Link>, 'sub1', <UserOutlined />),
-  getItem(<Link to="/promotions">Promotions</Link>, 'sub2', <TeamOutlined />),
-  getItem(<Link to="/offers">Offers</Link>, '9', <FileOutlined />),
-  getItem(<Link to="/refund">Refunds</Link>, '10', <FileOutlined />),
+  getItem(<Link to="/profit&loss">Profit & Loss</Link>, '3', <UserOutlined />),
+  getItem(<Link to="/promotions">Promotions</Link>, '4', <TeamOutlined />),
+  getItem(<Link to="/offers">Offers</Link>, '5', <FileOutlined />),
+  getItem(<Link to="/refund">Refunds</Link>, '6', <FileOutlined />),
 ];
 
 const ProfitAndLoss = () => {
@@ -88,19 +89,23 @@ const ProfitAndLoss = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-    <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-      <div className="demo-logo-vertical" style={{ textAlign: 'center', padding: '16px' }}>
-        {/* Replace 'path/to/your/logo.png' with the actual path to your logo */}
-        <img
-          src="../Images/logo.jpeg" 
-          alt="Logo"
-          style={{ width: collapsed ? '40px' : '100%', transition: 'width 0.3s' }} // Adjust width for collapsed state
-        />
-      </div>
-      <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
-    </Sider>
+      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+        <div className="demo-logo-vertical" style={{ textAlign: 'center', padding: '16px' }}>
+          <img
+            src={logo} // Use the imported logo
+            alt="Logo"
+            style={{
+              width: collapsed ? '40px' : '80%', // Adjust size of the logo
+              transition: 'width 0.3s',
+              border: '1px solid red', // Add red border
+              borderRadius: '200px', // Optional: round the corners
+            }}
+          />
+        </div>
+        <Menu theme="dark" defaultSelectedKeys={['2']} mode="inline" items={items} />
+      </Sider>
       <Layout>
-      <Header style={{ padding: 0, background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px' }}>
+      <Header style={{ padding: 0, background: '#d1bea8', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px' }}>
           {/* Search Bar */}
           <Search
             placeholder="Search offers..."
@@ -123,8 +128,8 @@ const ProfitAndLoss = () => {
           </div>
         </Content>
 
-        <Footer style={{ textAlign: 'center' }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        <Footer style={{ textAlign: 'center' , background: '#d1bea8', }}>
+        Ant Design ©{new Date().getFullYear()} Created by Ant UED
         </Footer>
       </Layout>
     </Layout>
