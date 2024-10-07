@@ -24,8 +24,8 @@ function getItem(label, key, icon, children) {
 
 // Menu items
 const items = [
-  getItem(<Link to="/">Dashboard</Link>, '1', <PieChartOutlined />),
-  getItem(<Link to="/sales">Sales</Link>, '2', <DesktopOutlined />),
+  getItem(<Link to="/">Dashboard</Link>, '1', <DesktopOutlined />),
+  getItem(<Link to="/sales">Sales</Link>, '2', <PieChartOutlined />),
   getItem(<Link to="/profit&loss">Profit & Loss</Link>, '3', <UserOutlined />),
   getItem(<Link to="/promotions">Promotions</Link>, '4', <TeamOutlined />),
   getItem(<Link to="/offers">Offers</Link>, '5', <FileOutlined />),
