@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Card, Button, Table, Input } from 'antd';
 import { jsPDF } from 'jspdf';
 import { Link } from 'react-router-dom';
+import axios from 'axios'; // Import axios for API requests
 import {
   DesktopOutlined,
   FileOutlined,
@@ -34,13 +35,19 @@ const items = [
 
 const ProfitAndLoss = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [salesData, setSalesData] = useState([]); // State to hold sales data
+  const [loading, setLoading] = useState(true);
 
-  // Sample sales data
-  const salesData = [
-    { key: '1', category: 'Merchandise', amount: 12000, date: '2024-10-01' },
-    { key: '2', category: 'Albums', amount: 8000, date: '2024-10-02', commission: 200 },
-    { key: '3', category: 'Tickets', amount: 15000, date: '2024-10-03', commission: 500 },
-  ];
+  // Fetch sales data from backend
+  useEffect(() => {
+    axios
+      .get('http://localhost:5000/api/profit/show') // Ensure to match your backend URL
+      .then((response) => {
+        setSalesData(response.data);
+        setLoading(false);
+      })
+      .catch((error) => console.error('Error fetching sales data:', error));
+  }, []);
 
   // Calculate total income and deductions
   const calculateProfitAndLoss = () => {
@@ -58,7 +65,7 @@ const ProfitAndLoss = () => {
     const doc = new jsPDF();
     doc.setFontSize(20);
     doc.text('Profit and Loss Statement', 14, 22);
-    
+
     doc.setFontSize(12);
     doc.text(`Total Income: $${totalIncome}`, 14, 40);
     doc.text(`Total Commission: $${totalCommission}`, 14, 50);
@@ -102,24 +109,18 @@ const ProfitAndLoss = () => {
             }}
           />
         </div>
-        <Menu theme="dark" defaultSelectedKeys={['2']} mode="inline" items={items} />
+        <Menu theme="dark" defaultSelectedKeys={['3']} mode="inline" items={items} />
       </Sider>
       <Layout>
-      <Header style={{ padding: 0, background: '#d1bea8', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px' }}>
-          {/* Search Bar */}
-          <Search
-            placeholder="Search offers..."
-            onSearch={(value) => console.log(value)}
-            style={{ width: 300 }}
-          />
-          {/* Current Time */}
+        <Header style={{ padding: 0, background: '#d1bea8', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px' }}>
+          <Search placeholder="Search offers..." onSearch={(value) => console.log(value)} style={{ width: 300 }} />
           <div style={{ fontSize: '18px' }}>{currentTime}</div>
         </Header>
         <Content style={{ margin: '24px 16px' }}>
           <div style={{ padding: 24, background: '#fff', borderRadius: 8 }}>
-          <h2>Profit and Loss</h2>
+            <h2>Profit and Loss</h2>
             <Card title="Profit and Loss Overview">
-              <Table columns={columns} dataSource={salesData} pagination={false} />
+              <Table columns={columns} dataSource={salesData} loading={loading} pagination={false} />
               <h3>Total Income: ${totalIncome}</h3>
               <h3>Total Commission: ${totalCommission}</h3>
               <h3>Net Profit: ${netProfit}</h3>
@@ -127,9 +128,8 @@ const ProfitAndLoss = () => {
             </Card>
           </div>
         </Content>
-
-        <Footer style={{ textAlign: 'center' , background: '#d1bea8', }}>
-        Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        <Footer style={{ textAlign: 'center', background: '#d1bea8' }}>
+          Ant Design ©{new Date().getFullYear()} Created by Ant UED
         </Footer>
       </Layout>
     </Layout>
