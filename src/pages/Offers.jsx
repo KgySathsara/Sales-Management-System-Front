@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Button, message, Table, Modal, Form, Input } from 'antd';
 import { Link } from 'react-router-dom';
 import { DesktopOutlined, FileOutlined, PieChartOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
-import axios from 'axios';
 import logo from '../Images/logo.jpg';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -23,15 +22,29 @@ const Offers = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Fetch offers
-  const fetchOffers = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/offers/show');
-      setOffers(response.data);
-    } catch (error) {
-      console.error('Error fetching offers:', error);
-      message.error('Failed to fetch offers.');
-    }
+  // Fetch offers (dummy data)
+  const fetchOffers = () => {
+    const dummyOffers = [
+      {
+        _id: '1',
+        name: 'Winter Sale',
+        description: 'Get 50% off on winter collection',
+        code: 'WINTER50'
+      },
+      {
+        _id: '2',
+        name: 'New Year Offer',
+        description: 'Flat 20% off on all products',
+        code: 'NEWYEAR20'
+      },
+      {
+        _id: '3',
+        name: 'Black Friday Deal',
+        description: 'Special discounts for Black Friday',
+        code: 'BLACKFRIDAY'
+      }
+    ];
+    setOffers(dummyOffers);
   };
 
   useEffect(() => {
@@ -45,32 +58,23 @@ const Offers = () => {
   };
 
   // Handle form submission
-  const handleFinish = async (values) => {
-    try {
-      if (editingOffer) {
-        await axios.put(`http://localhost:5000/api/offers/${editingOffer._id}`, values);
-      } else {
-        await axios.post('http://localhost:5000/api/offers/add', values);
-      }
-      setIsModalVisible(false);
-      fetchOffers();
-      message.success('Offer saved successfully!');
-    } catch (error) {
-      console.error('Error saving offer:', error);
-      message.error('Failed to save offer.');
+  const handleFinish = (values) => {
+    if (editingOffer) {
+      // Update existing offer
+      setOffers((prevOffers) => prevOffers.map((offer) => (offer._id === editingOffer._id ? { ...offer, ...values } : offer)));
+    } else {
+      // Create new offer
+      const newOffer = { _id: Date.now().toString(), ...values };
+      setOffers((prevOffers) => [...prevOffers, newOffer]);
     }
+    setIsModalVisible(false);
+    message.success('Offer saved successfully!');
   };
 
   // Handle delete offer
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:5000/api/offers/${id}`);
-      fetchOffers();
-      message.success('Offer deleted successfully!');
-    } catch (error) {
-      console.error('Error deleting offer:', error);
-      message.error('Failed to delete offer.');
-    }
+  const handleDelete = (id) => {
+    setOffers((prevOffers) => prevOffers.filter((offer) => offer._id !== id));
+    message.success('Offer deleted successfully!');
   };
 
   // Columns for the offers table
