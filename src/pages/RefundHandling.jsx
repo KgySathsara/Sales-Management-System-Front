@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Input, Button, Table, message, Modal } from 'antd';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import {
   DesktopOutlined,
@@ -34,25 +33,39 @@ const items = [
   getItem(<Link to="/refund">Refunds</Link>, '6', <FileOutlined />),
 ];
 
+// Dummy data for orders
+const dummyOrders = [
+  {
+    id: 1,
+    customerName: 'John Doe',
+    totalAmount: '$200',
+    status: 'Completed',
+  },
+  {
+    id: 2,
+    customerName: 'Jane Smith',
+    totalAmount: '$350',
+    status: 'Pending',
+  },
+  {
+    id: 3,
+    customerName: 'Chris Johnson',
+    totalAmount: '$120',
+    status: 'Refunded',
+  },
+  {
+    id: 4,
+    customerName: 'Alice Brown',
+    totalAmount: '$450',
+    status: 'Completed',
+  },
+];
+
 const RefundHandling = () => {
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState(dummyOrders); // Using dummy data
   const [searchValue, setSearchValue] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-
-  // Fetch orders from the backend
-  const fetchOrders = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/orders'); // API endpoint for fetching orders
-      setOrders(response.data);
-    } catch (error) {
-      message.error('Failed to fetch orders.');
-    }
-  };
-
-  useEffect(() => {
-    fetchOrders();
-  }, []);
 
   // Handle search input change
   const handleSearchChange = (e) => {
@@ -70,17 +83,10 @@ const RefundHandling = () => {
     setIsModalVisible(true);
   };
 
-  // Handle refund request
-  const handleRefund = async () => {
-    try {
-      // Call backend API to process refund
-      await axios.post('http://localhost:5000/api/refunds', { orderId: selectedOrder.id });
-      message.success(`Refund processed for Order ID: ${selectedOrder.id}`);
-      fetchOrders(); // Refresh orders after refund
-      setIsModalVisible(false);
-    } catch (error) {
-      message.error('Failed to process refund.');
-    }
+  // Handle refund request (mock functionality)
+  const handleRefund = () => {
+    message.success(`Refund processed for Order ID: ${selectedOrder.id}`);
+    setIsModalVisible(false);
   };
 
   const columns = [
@@ -145,13 +151,13 @@ const Sales = () => {
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
         <div className="demo-logo-vertical" style={{ textAlign: 'center', padding: '16px' }}>
           <img
-            src={logo} // Use the imported logo
+            src={logo}
             alt="Logo"
             style={{
-              width: collapsed ? '40px' : '80%', // Adjust size of the logo
+              width: collapsed ? '40px' : '80%',
               transition: 'width 0.3s',
-              border: '1px solid red', // Add red border
-              borderRadius: '200px', // Optional: round the corners
+              border: '1px solid red',
+              borderRadius: '200px',
             }}
           />
         </div>
@@ -179,7 +185,7 @@ const Sales = () => {
           <RefundHandling />
         </Content>
         <Footer style={{ textAlign: 'center', background: '#d1bea8', }}>
-        Ant Design ©{new Date().getFullYear()} Created by Ant UED
+          Ant Design ©{new Date().getFullYear()} Created by Ant UED
         </Footer>
       </Layout>
     </Layout>
